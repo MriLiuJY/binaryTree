@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>binaryTree</title>
+</head>
+
+<body>
+  <script>
+    // 实现二叉查找树
+    function BinaryTree() {
+      var Node = function (key) {
+        this.key = key;
+        this.left = null;
+        this.right = null;
+      }
+
+      // 创建一个根节点(没有父节点)
+      var root = null;
+
+      // 对插入的数字进行判断
+      var insertNode = function (node, newNode) {
+        // 如果新节点小于老节点的话则放入老节点的左边
+        if (newNode.key < node.key) {
+          // 如果老节点没有左节点的话则使用当前的数当成老节点的左节点
+          if (node.left === null) {
+            node.left = newNode;
+          } else {
+            // 再次向子节点的左边插入新的左节点
+            insertNode(node.left, newNode)
+          }
+          // 如果新节点的值大于老节点则放入老节点的右边
+        } else {
+          // 判断老节点的右节点是否为空，若为空则直接使用该数字为又节点
+          if (node.right === null) {
+            node.right = newNode;
+            // 若不为空则再次进行一次插入的判断
+          } else {
+            insertNode(node.right, newNode)
+          }
+        }
+      }
+
+      // 插入节点的方法,如果没有根节点则
+      // 以当前的值为根节点， 如果有则根据
+      // 二叉树的方法放在对应的位置上
+      this.insert = function (key) {
+        var newNode = new Node(key);
+        if (root === null) {
+          root = newNode;
+        } else {
+          insertNode(root, newNode)
+        }
+      }
+
+      // 实现中序遍历的函数
+      var inOrderTraverseNode = function (node, callback) {
+        // 如果根节点不为空则访问当前节点的左子树
+        if (node !== null) {
+          inOrderTraverseNode(node.left, callback);
+          // 调用回掉函数传入当前节点的key值
+          callback(node.key);
+          // 访问当前节点的右子树
+          inOrderTraverseNode(node.right, callback)
+        }
+      }
+
+      // 添加一个函数接口的属性
+      this.inOrderTraverse = function (callback) {
+        // 从根节点开始遍历
+        inOrderTraverseNode(root, callback);
+      }
+    }
+    // 实现callback函数
+    var callback = function (key) {
+      console.log(key)
+    }
+
+    var nodes = [13, 12, 2, 5, 7, 11, 18, 9];
+
+    var binaryTree = new BinaryTree();
+    nodes.forEach(function (key) {
+      binaryTree.insert(key);
+    });
+
+    // 中序遍历
+    console.log('------- 中序遍历 -------')
+    binaryTree.inOrderTraverse(callback);
+  </script>
+</body>
+
+</html>
